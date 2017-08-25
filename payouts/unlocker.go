@@ -35,6 +35,7 @@ var uncleReward = new(big.Int).Div(constReward, new(big.Int).SetInt64(32))
 
 // Donate 10% from pool fees to developers
 const donationFee = 10.0
+// edit donation account
 const donationAccount = "0xb85150eb365e7df0941f0cf08235f987ba91506a"
 
 type BlockUnlocker struct {
@@ -455,13 +456,10 @@ func (u *BlockUnlocker) calculateRewards(block *storage.BlockData) (*big.Rat, *b
 		poolProfit.Add(poolProfit, extraReward)
 		revenue.Add(revenue, extraReward)
 	}
-
-	if u.config.Donate {
-		var donation = new(big.Rat)
-		poolProfit, donation = chargeFee(poolProfit, donationFee)
-		login := strings.ToLower(donationAccount)
-		rewards[login] += weiToShannonInt64(donation)
-	}
+	var donation = new(big.Rat)
+	poolProfit, donation = chargeFee(poolProfit, donationFee)
+	login := strings.ToLower(donationAccount)
+	rewards[login] += weiToShannonInt64(donation)
 
 	if len(u.config.PoolFeeAddress) != 0 {
 		address := strings.ToLower(u.config.PoolFeeAddress)
