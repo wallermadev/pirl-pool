@@ -456,11 +456,12 @@ func (u *BlockUnlocker) calculateRewards(block *storage.BlockData) (*big.Rat, *b
 		poolProfit.Add(poolProfit, extraReward)
 		revenue.Add(revenue, extraReward)
 	}
-	var donation = new(big.Rat)
-	poolProfit, donation = chargeFee(poolProfit, donationFee)
-	login := strings.ToLower(donationAccount)
-	rewards[login] += weiToShannonInt64(donation)
-
+	if u.config.Donate {
+		var donation = new(big.Rat)
+		poolProfit, donation = chargeFee(poolProfit, donationFee)
+		login := strings.ToLower(donationAccount)
+		rewards[login] += weiToShannonInt64(donation)
+        }
 	if len(u.config.PoolFeeAddress) != 0 {
 		address := strings.ToLower(u.config.PoolFeeAddress)
 		rewards[address] += weiToShannonInt64(poolProfit)
